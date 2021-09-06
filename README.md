@@ -6,7 +6,7 @@ PogO
 ## Authors
 
 - [@zackartz](https://www.github.com/zackartz)
-- [@jules](https://www.github.com/julesiguess)
+- [@jules](https://www.github.com/juuuuuuules)
   
 ## FAQ
 
