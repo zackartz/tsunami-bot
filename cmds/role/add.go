@@ -26,20 +26,20 @@ var AddRoleCommand = &cmdlr2.Command{
 			rID, err := strconv.ParseInt(ctx.Args.Get(0).AsRoleMentionID(), 10, 64)
 
 			if err != nil {
-				ctx.ResponseText(fmt.Sprintf("%v", err))
+				ctx.ResponseText(fmt.Sprintf("1 %v", err))
 				return
 			}
 
 			var role *disgord.Role
 			roles, err := ctx.Client.Guild(ctx.Event.Message.GuildID).GetRoles()
 			if err != nil {
-				ctx.ResponseText(fmt.Sprintf("%v", err))
+				ctx.ResponseText(fmt.Sprintf("2 %v", err))
 				return
 			}
 
 			role, err = getRoles(roles, rID)
 			if err != nil {
-				ctx.ResponseText(fmt.Sprintf("%v", err))
+				ctx.ResponseText(fmt.Sprintf("3 %v", err))
 				return
 			}
 
@@ -55,7 +55,7 @@ var AddRoleCommand = &cmdlr2.Command{
 				id := regex.Find([]byte(ctx.Args.Get(1).Raw()))
 				eID, err := strconv.ParseInt(string(id), 10, 64)
 				if err != nil {
-					ctx.ResponseText(fmt.Sprintf("%v", err))
+					ctx.ResponseText(fmt.Sprintf("4 %v", err))
 				}
 				emoji, err = ctx.Client.Guild(ctx.Event.Message.GuildID).Emoji(disgord.Snowflake(eID)).Get()
 				if err != nil {
@@ -63,46 +63,50 @@ var AddRoleCommand = &cmdlr2.Command{
 					return
 				}
 				_, err = db.Client.Role.CreateOne(
-					db.Role.ID.Set(strconv.Itoa(int(role.ID))),
+					db.Role.ID.Set(role.ID.String()),
 					db.Role.Name.Set(role.Name),
 					db.Role.Emoji.Set(emoji.Name),
 					db.Role.EmojiID.Set(types.BigInt(eID)),
+					db.Role.ID.Set(role.ID.String()),
 					db.Role.RoleMessage.Link(
 						db.RoleMessage.ChannelID.Equals(types.BigInt(ctx.Event.Message.ID)),
 					),
 				).Exec(context.Background())
 				if err != nil {
-					ctx.ResponseText(fmt.Sprintf("%v", err))
+					ctx.ResponseText(fmt.Sprintf("5 %v", err))
 					return
 				}
 			} else {
 				emoji = &disgord.Emoji{Name: ctx.Args.Get(1).Raw()}
 				_, err = db.Client.Role.CreateOne(
-					db.Role.ID.Set(strconv.Itoa(int(role.ID))),
+					db.Role.ID.Set(role.ID.String()),
 					db.Role.Name.Set(role.Name),
 					db.Role.Emoji.Set(ctx.Args.Get(1).Raw()),
-					db.Role.EmojiID.Set(types.BigInt(0)),
+					db.Role.EmojiID.Set(0),
 					db.Role.RoleMessage.Link(
-						db.RoleMessage.ChannelID.Equals(types.BigInt(ctx.Event.Message.ID)),
+						db.RoleMessage.ChannelID.Equals(types.BigInt(ctx.Event.Message.ChannelID)),
 					),
 				).Exec(context.Background())
 				if err != nil {
-					ctx.ResponseText(fmt.Sprintf("%v", err))
+					ctx.ResponseText(fmt.Sprintf("6 %v", err))
 					return
 				}
 			}
 
 			msg, err := db.Client.RoleMessage.FindFirst(
 				db.RoleMessage.ChannelID.Equals(types.BigInt(ctx.Event.Message.ChannelID)),
+			).With(
+				db.RoleMessage.Roles.Fetch(),
 			).Exec(context.Background())
 
 			embed := renderEmbed(msg)
 
-			_, err = ctx.Client.Channel(ctx.Event.Message.ChannelID).Message(disgord.Snowflake(msg.ChannelID)).UpdateBuilder().SetEmbed(embed).Execute()
+			_, err = ctx.Client.Channel(ctx.Event.Message.ChannelID).Message(disgord.Snowflake(msg.MessageID)).UpdateBuilder().SetEmbed(embed).Execute()
 
-			err = ctx.Client.Channel(disgord.Snowflake(msg.ChannelID)).Message(disgord.Snowflake(msg.ChannelID)).Reaction(emoji).Create()
+			err = ctx.Client.Channel(disgord.Snowflake(msg.ChannelID)).Message(disgord.Snowflake(msg.MessageID)).Reaction(emoji).Create()
 			if err != nil {
-				ctx.ResponseText(fmt.Sprintf("%v", err))
+				ctx.ResponseText(fmt.Sprintf("7 %v", err))
+				return
 			}
 
 			_ = ctx.Client.Channel(ctx.Event.Message.ChannelID).Message(ctx.Event.Message.ID).Delete()

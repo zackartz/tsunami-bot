@@ -12,6 +12,7 @@ import (
 	"github.com/zackartz/cmdlr2"
 	"github.com/zackartz/tsunami-bot/cmds"
 	"github.com/zackartz/tsunami-bot/db"
+	"github.com/zackartz/tsunami-bot/events"
 )
 
 var (
@@ -58,6 +59,9 @@ func main() {
 		BotToken: os.Getenv("TOKEN"),
 	})
 	defer client.Gateway().StayConnectedUntilInterrupted()
+
+	client.Gateway().MessageReactionAdd(events.EmojiAdd)
+	client.Gateway().MessageReactionRemove(events.EmojiRemove)
 
 	router := cmdlr2.Create(&cmdlr2.Router{
 		Prefixes:         []string{"&"},

@@ -40,6 +40,8 @@ var RoleRemoveCommand = &cmdlr2.Command{
 
 			msg, err := db.Client.RoleMessage.FindUnique(
 				db.RoleMessage.ChannelID.Equals(types.BigInt(ctx.Event.Message.ChannelID)),
+			).With(
+				db.RoleMessage.Roles.Fetch(),
 			).Exec(context.Background())
 			if err != nil {
 				ctx.ResponseText(fmt.Sprintf("%v", err))
@@ -104,6 +106,8 @@ var RoleRemoveCommand = &cmdlr2.Command{
 
 			msg, err = db.Client.RoleMessage.FindUnique(
 				db.RoleMessage.ChannelID.Equals(types.BigInt(ctx.Event.Message.ChannelID)),
+			).With(
+				db.RoleMessage.Roles.Fetch(),
 			).Exec(context.Background())
 			if err != nil {
 				ctx.ResponseText(fmt.Sprintf("%v", err))

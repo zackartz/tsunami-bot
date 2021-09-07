@@ -8,11 +8,5 @@ func Init() error {
 		return err
 	}
 
-	defer func() {
-		if err := Client.Prisma.Disconnect(); err != nil {
-			panic(err)
-		}
-	}()
-
 	return nil
 }
