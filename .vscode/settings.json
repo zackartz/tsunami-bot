@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "pog",
+            "database": "${workspaceFolder:tsunami-bot}/dev.db"
+        }
+    ]
+}
