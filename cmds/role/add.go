@@ -150,7 +150,7 @@ func renderEmbed(msg *db.RoleMessageModel) *disgord.Embed {
 		Timestamp: disgord.Time{
 			Time: time.Now(),
 		},
-		Color:  0xffff00,
+		Color:  0xa3d5ff,
 		Fields: fields,
 	}
 }
