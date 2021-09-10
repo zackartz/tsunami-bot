@@ -18,14 +18,14 @@ model Role {
   EmojiID              BigInt
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt
-  RoleMessage          RoleMessage? @relation(fields: [roleMessageChannelID], references: [ChannelID])
-  roleMessageChannelID BigInt?
+  RoleMessage          RoleMessage? @relation(fields: [roleMessageMessageID], references: [MessageID])
+  roleMessageMessageID BigInt?
 }
 
 model RoleMessage {
-  ChannelID BigInt   @id
+  ChannelID BigInt
   GuildID   BigInt
-  MessageID BigInt 
+  MessageID BigInt   @id
   Roles     Role[]
   CreatedAt DateTime @default(now())
   UpdatedAt DateTime @updatedAt
