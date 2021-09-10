@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tsunami-bot
+spec:
+  selector:
+    matchLabels:
+      app: tsunami-bot
+  template:
+    metadata:
+      labels:
+        app: tsunami-bot
+    spec:
+      containers:
+      - name: tsunami-bot
+        image: <Image>
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
