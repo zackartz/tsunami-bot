@@ -22,7 +22,7 @@ var AddRoleCommand = &cmdlr2.Command{
 	Usage:       "add @role :emoji:",
 	Example:     "add @DPS :DPS:",
 	Handler: func(ctx *cmdlr2.Ctx) {
-		if ctx.Event.Message.Author.ID == 133314498214756352 || ctx.Event.Message.Author.ID == 261558620632645633 {
+		if ctx.Event.Message.Author.ID == 133314498214756352 || ctx.Event.Message.Author.ID == 261558620632645633 || ctx.Event.Message.Author.ID == 271787171889807360 {
 			rID, err := strconv.ParseInt(ctx.Args.Get(0).AsRoleMentionID(), 10, 64)
 
 			if err != nil {
