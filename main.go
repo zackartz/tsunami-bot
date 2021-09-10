@@ -39,7 +39,7 @@ func main() {
 		return strings.ToUpper(fmt.Sprintf("| %-6s|", i))
 	}
 	output.FormatMessage = func(i interface{}) string {
-		return fmt.Sprintf("***%s****", i)
+		return fmt.Sprintf("%s", i)
 	}
 	output.FormatFieldName = func(i interface{}) string {
 		return fmt.Sprintf("%s:", i)
@@ -55,6 +55,8 @@ func main() {
 		log.Info().Msg("no token")
 	}
 
+	log.Info().Msg("Starting bot....")
+
 	client := disgord.New(disgord.Config{
 		BotToken: os.Getenv("TOKEN"),
 	})
@@ -62,6 +64,7 @@ func main() {
 
 	client.Gateway().MessageReactionAdd(events.EmojiAdd)
 	client.Gateway().MessageReactionRemove(events.EmojiRemove)
+	client.Gateway().Ready(events.Ready)
 
 	router := cmdlr2.Create(&cmdlr2.Router{
 		Prefixes:         []string{"&"},
