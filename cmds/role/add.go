@@ -69,7 +69,7 @@ var AddRoleCommand = &cmdlr2.Command{
 					db.Role.EmojiID.Set(types.BigInt(eID)),
 					db.Role.ID.Set(role.ID.String()),
 					db.Role.RoleMessage.Link(
-						db.RoleMessage.ChannelID.Equals(types.BigInt(ctx.Event.Message.ID)),
+						db.RoleMessage.ChannelID.Equals(types.BigInt(ctx.Event.Message.ChannelID)),
 					),
 				).Exec(context.Background())
 				if err != nil {
