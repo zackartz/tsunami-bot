@@ -1,7 +1,7 @@
 
 # Tsunami Bot
 
-PogO
+PogU
 
 ## Authors
 
